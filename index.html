@@ -1,13 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hey, I'm Alex — a designer & developer. A little corner of the internet." />
+  <title>Alex — About Me</title>
+
+  <!-- Optional web font. Falls back to a clean system stack if offline. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ---------------------------------------------------------------
+       THEME TOKENS
+       Edit these to change the look of the page in one place.
+    --------------------------------------------------------------- */
+    :root {
+      --bg: #f6f6f7;
+      --card: #ffffff;
+      --text: #16171a;
+      --muted: #8b8d94;
+      --border: #e9e9ec;
+      --hover: #f0f0f2;
+      --accent: #16171a;
+      --accent-text: #ffffff;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+      --ring: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0e0e10;
+      --card: #18181b;
+      --text: #f4f4f5;
+      --muted: #8b8d94;
+      --border: #2a2a2e;
+      --hover: #232327;
+      --accent: #f4f4f5;
+      --accent-text: #0e0e10;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      --ring: #18181b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 48px 20px 32px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 480px;
+      animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Top controls ------------------------------------------------- */
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: -18px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+    .icon-btn:hover { transform: translateY(-2px); color: var(--text); background: var(--hover); }
+    .icon-btn svg { width: 17px; height: 17px; }
+    .icon-btn .moon { display: none; }
+    [data-theme="dark"] .icon-btn .sun { display: none; }
+    [data-theme="dark"] .icon-btn .moon { display: block; }
+
+    /* Profile ------------------------------------------------------ */
+    .profile { text-align: center; padding: 12px 0 28px; }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 18px;
+      display: block;
+      border: 3px solid var(--ring);
+      box-shadow: 0 0 0 1px var(--border), var(--shadow);
+      background: var(--hover);
+    }
+
+    .name {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verified { width: 18px; height: 18px; color: #3b9dff; flex: none; }
+
+    .handle { color: var(--muted); font-size: 0.9rem; margin-top: 3px; }
+
+    .bio {
+      margin: 16px auto 0;
+      max-width: 360px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: color-mix(in srgb, var(--text) 80%, var(--muted));
+    }
+
+    .meta {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .meta span { display: inline-flex; align-items: center; gap: 5px; }
+    .meta svg { width: 14px; height: 14px; }
+
+    /* Social icons -------------------------------------------------- */
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .socials a {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .socials a:hover { transform: translateY(-3px); color: var(--text); border-color: var(--muted); }
+    .socials svg { width: 17px; height: 17px; fill: currentColor; }
+
+    /* Links --------------------------------------------------------- */
+    .links { display: grid; gap: 12px; }
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .link:hover { transform: translateY(-3px); border-color: var(--muted); }
+
+    .link-icon {
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--hover);
+      color: var(--text);
+    }
+    .link-icon svg { width: 18px; height: 18px; }
+
+    .link-text { flex: 1; min-width: 0; }
+    .link-title { font-size: 0.92rem; font-weight: 600; }
+    .link-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    .arrow { color: var(--muted); width: 16px; height: 16px; flex: none; transition: transform 0.2s ease; }
+    .link:hover .arrow { transform: translate(2px, -2px); }
+
+    .link.featured { background: var(--accent); color: var(--accent-text); border-color: transparent; }
+    .link.featured .link-icon { background: rgba(255,255,255,0.12); color: var(--accent-text); }
+    .link.featured .link-sub, .link.featured .arrow { color: color-mix(in srgb, var(--accent-text) 65%, transparent); }
+
+    /* Footer -------------------------------------------------------- */
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .footer a { color: inherit; text-decoration: none; }
+    .footer a:hover { color: var(--text); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
+  <main class="page">
 
-        <a href="layout.html"> layout</a>
-    
+    <!-- Theme toggle -->
+    <div class="topbar">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+
+    <!-- PROFILE: replace the name, handle, bio, avatar URL and links below -->
+    <section class="profile">
+      <img class="avatar" src="https://i.pravatar.cc/240?img=12" alt="Portrait of Alex" />
+
+      <h1 class="name">
+        Alex Rivera
+        <!-- Verified badge (optional: delete this svg to remove) -->
+        <svg class="verified" viewBox="0 0 24 24" fill="currentColor" aria-label="Verified"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-.9 2.9.9 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l.9-2.9L3 10.4l2.6-1.5 1-2.8 3 .3L12 2z"/><path d="M10.6 14.6l-2.3-2.3 1.1-1.1 1.2 1.2 3.1-3.1 1.1 1.1-4.2 4.2z" fill="#fff"/></svg>
+      </h1>
+      <div class="handle">@alexrivera</div>
+
+      <p class="bio">Designer &amp; developer making things for the web. Currently building small tools with big heart. Coffee, code, and long walks. ☕</p>
+
+      <div class="meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Somewhere on Earth
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Joined 2021
+        </span>
+      </div>
+
+      <!-- Social icon row: GitHub, X, Instagram, Email -->
+      <div class="socials">
+        <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.21 21.38 23.5 17.08 23.5 12 23.5 5.73 18.27.5 12 .5z"/></svg>
+        </a>
+        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X" title="X">
+          <svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.4L6.53 22H3.4l7.24-8.28L2.5 2h6.4l4.43 5.86L18.9 2zm-1.1 18h1.73L7.37 3.9H5.5L17.8 20z"/></svg>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zM12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.88-7.78a1.08 1.08 0 1 0 0 2.15 1.08 1.08 0 0 0 0-2.15z"/></svg>
+        </a>
+        <a href="mailto:hello@example.com" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm9 7.2L3.4 6.5H20.6L12 12.2z"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- LINKS -->
+    <section class="links">
+      <a class="link featured" href="https://example.com" target="_blank" rel="noopener">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-.9 2.9.9 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l.9-2.9L3 10.4l2.6-1.5 1-2.8 3 .3L12 2z"/></svg>
+        </span>
+        <span class="link-text">
+          <span class="link-title">My latest project</span>
+          <span class="link-sub">Something I've been working on</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link" href="https://github.com" target="_blank" rel="noopener">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.21 21.38 23.5 17.08 23.5 12 23.5 5.73 18.27.5 12 .5z"/></svg>
+        </span>
+        <span class="link-text">
+          <span class="link-title">GitHub</span>
+          <span class="link-sub">Code, experiments &amp; repos</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>
+
+      <a class="link" href="mailto:hello@example.com">
+        <span class="link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        </span>
+        <span class="link-text">
+          <span class="link-title">Get in touch</span>
+          <span class="link-sub">hello@example.com</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>
+    </section>
+
+    <footer class="footer">
+      Made with care · <a href="#">© 2026 Alex Rivera</a>
+    </footer>
+  </main>
+
+  <script>
+    // Theme toggle: respects system preference and remembers the choice.
+    const root = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+
+    btn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
 </body>
 </html>
